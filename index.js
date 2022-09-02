@@ -72,6 +72,110 @@ client.on("ready", () => {
     })
 })
 
+const { createCanvas, loadImage, registerFont } = require("canvas")
+registerFont("./font/roboto.ttf", { family: "roboto" })
+registerFont("./font/robotoBold.ttf", { family: "robotoBold" })
+
+
+client.on("guildMemberRemove", async member => {
+    //Creare un canvas
+    let canvas = await createCanvas(1700, 600) //createCanvas(larghezza, altezza)
+    let ctx = await canvas.getContext("2d")
+
+    //Caricare un immagine
+    let img = await loadImage("./img/1.png")
+    ctx.drawImage(img, canvas.width / 2 - img.width / 2, canvas.height / 2 - img.height / 2) //drawImage(immagine, posizioneX, posizioneY, larghezza, altezza)
+
+
+    //Riempire di un colore
+    ctx.fillStyle = "rgba(0,0,0,0.30)"
+    ctx.fillRect(70, 70, canvas.width - 70 - 70, canvas.height - 70 - 70) //fillReact(posizioneX, posizioneY, larghezza, altezza)
+
+    //Caricare un immagine rotonda
+    ctx.save()
+    ctx.beginPath()
+    ctx.arc(150 + 300 / 2, canvas.height / 2, 150, 0, 2 * Math.PI, false) //arc(centroX, centroY, raggio, startAngolo, endAngolo, sensoOrario/Antiorario)
+    ctx.clip()
+    img = await loadImage(member.displayAvatarURL({ format: "png" }))
+    ctx.drawImage(img, 150, canvas.height / 2 - 300 / 2, 300, 300)
+    ctx.restore()
+
+    //Creare le scritte
+    ctx.fillStyle = "#fff"
+    ctx.textBaseline = "middle"
+
+    ctx.font = "80px roboto" //potete anche inserire sans-serif
+    ctx.fillText("ADDIO", 500, 200) //Testo, posizioneX, posizioneY
+
+    ctx.font = "100px robotoBold"
+    ctx.fillText(member.user.username.slice(0, 25), 500, canvas.height / 2)
+
+    ctx.font = "50px roboto"
+    ctx.fillText(`${member.guild.memberCount}° membro`, 500, 400)
+
+    //Mandare un canvas
+    let channel = client.channels.cache.get("1014602805522219068")
+
+    let attachment = new Discord.MessageAttachment(canvas.toBuffer(), "canvas.png")
+
+    channel.send({ files: [attachment] })
+
+    let embed = new Discord.MessageEmbed()
+        .setTitle("ADDIO")
+        .setThumbnail("attachment://canvas.png")
+
+    channel.send({ files: [attachment] })
+})
+
+client.on("guildMemberAdd", async member => {
+    //Creare un canvas
+    let canvas = await createCanvas(1700, 600) //createCanvas(larghezza, altezza)
+    let ctx = await canvas.getContext("2d")
+
+    //Caricare un immagine
+    let img = await loadImage("./img/1.png")
+    ctx.drawImage(img, canvas.width / 2 - img.width / 2, canvas.height / 2 - img.height / 2) //drawImage(immagine, posizioneX, posizioneY, larghezza, altezza)
+
+
+    //Riempire di un colore
+    ctx.fillStyle = "rgba(0,0,0,0.30)"
+    ctx.fillRect(70, 70, canvas.width - 70 - 70, canvas.height - 70 - 70) //fillReact(posizioneX, posizioneY, larghezza, altezza)
+
+    //Caricare un immagine rotonda
+    ctx.save()
+    ctx.beginPath()
+    ctx.arc(150 + 300 / 2, canvas.height / 2, 150, 0, 2 * Math.PI, false) //arc(centroX, centroY, raggio, startAngolo, endAngolo, sensoOrario/Antiorario)
+    ctx.clip()
+    img = await loadImage(member.displayAvatarURL({ format: "png" }))
+    ctx.drawImage(img, 150, canvas.height / 2 - 300 / 2, 300, 300)
+    ctx.restore()
+
+    //Creare le scritte
+    ctx.fillStyle = "#fff"
+    ctx.textBaseline = "middle"
+
+    ctx.font = "80px roboto" //potete anche inserire sans-serif
+    ctx.fillText("BENVENUTO", 500, 200) //Testo, posizioneX, posizioneY
+
+    ctx.font = "100px robotoBold"
+    ctx.fillText(member.user.username.slice(0, 25), 500, canvas.height / 2)
+
+    ctx.font = "50px roboto"
+    ctx.fillText(`${member.guild.memberCount}° membro`, 500, 400)
+
+    //Mandare un canvas
+    let channel = client.channels.cache.get("999267985069985855")
+
+    let attachment = new Discord.MessageAttachment(canvas.toBuffer(), "canvas.png")
+
+    channel.send({ files: [attachment] })
+
+    let embed = new Discord.MessageEmbed()
+        .setTitle("BENVENUTO")
+        .setThumbnail("attachment://canvas.png")
+
+    channel.send({ files: [attachment] })
+})
 
 
 client.on("interactionCreate", interaction => {
