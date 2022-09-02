@@ -103,7 +103,7 @@ client.on("interactionCreate", interaction => {
             return interaction.reply({ content: "Non posso bannare questo utente", ephemeral: true })
         }
 
-        member.kick()
+        member.ban()
 
         var embed = new Discord.MessageEmbed()
             .setTitle("Utente bannato")
