@@ -63,25 +63,31 @@ client.on("ready", () => {
 
         guild.commands.create({
             name: "ora",
-            description: "risponde con l'orario",
+            description: "Risponde con l'orario",
             
         })
 
         guild.commands.create({
             name: "social-list",
-            description: "risponde con la lista dei social",
+            description: "Risponde con la lista dei social",
             
         })
 
         guild.commands.create({
             name: "tik-tok",
-            description: "tik tok user",
+            description: "Tik tok user",
             
         })
 
         guild.commands.create({
             name: "contributi",
             description: "Dona e aiuta la community",
+            
+        })
+
+        guild.commands.create({
+            name: "serverinfo",
+            description: "Tutte le informazioni sul server",
             
         })
 
@@ -214,6 +220,34 @@ client.on("interactionCreate", interaction => {
 
     if (interaction.commandName == "contributi") {
         interaction.reply({ content: "Se ci vovvesti donare e dare un contributo alla communito potresti donare anche sono 1 euro per l'impegno qui: https://www.paypal.me/thomas10998", ephemeral: true });
+        
+    }
+
+    if (interaction.commandName == "serverinfo") {
+        var server = message.member.guild;
+
+        var botCount = server.members.cache.filter(member => member.user.bot).size;
+        var utentiCount = server.memberCount - botCount;
+
+        var categoryCount = server.channels.cache.filter(c => c.type == "category").size
+        var textCount = server.channels.cache.filter(c => c.type == "text").size
+        var voiceCount = server.channels.cache.filter(c => c.type == "voice").size
+
+        var embed = new Discord.MessageEmbed()
+            .setTitle(server.name)
+            .setDescription("Tutte le info su questo server")
+            .setThumbnail(server.iconURL())
+            .addField("Owner", "```" + server.owner.user.username + "```", true)
+            .addField("Server id", "```" + server.id + "```", true)
+            .addField("Server region", "```" + server.region + "```", true)
+            .addField("Members", "```Total: " + server.memberCount + " - Users: " + utentiCount + " - Bots: " + botCount + "```", false)
+            .addField("Channels", "```Category: " + categoryCount + " - Text: " + textCount + " - Voice: " + voiceCount + "```", false)
+            .addField("Server created", "```" + server.createdAt.toDateString() + "```", true)
+            .addField("Boost level", "```Level " + server.premiumTier + " (Boost: " + server.premiumSubscriptionCount + ")```", true)
+            .setColor("AQUA")
+
+        message.channel.send(embed)
+
         
     }
 
