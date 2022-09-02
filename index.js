@@ -73,8 +73,8 @@ client.on("ready", () => {
 })
 
 const { createCanvas, loadImage, registerFont } = require("canvas")
-registerFont("./font/roboto.ttf", { family: "roboto" })
-registerFont("./font/robotoBold.ttf", { family: "robotoBold" })
+registerFont("./font/Roboto.ttf", { family: "roboto" })
+registerFont("./font/RobotoBold.ttf", { family: "robotoBold" })
 
 
 client.on("guildMemberRemove", async member => {
