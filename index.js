@@ -392,6 +392,15 @@ client.on("messageCreate", message => {
 
 client.on("interactionCreate", interaction => {
     if (interaction.customId == "apriTicket") {
+        
+        let button5 = new Discord.MessageButton()
+            .setLabel("⛔ CHIUDI")
+            .setCustomId("Chiudi")
+            .setStyle("DANGER")
+
+        let row4 = new Discord.MessageActionRow()
+            .addComponents(button5)
+        
         if (interaction.guild.channels.cache.find(canale => canale.topic == `User ID: ${interaction.user.id}`)) {
             interaction.user.send("Hai gia un ticket aperto").catch(() => { })
             return
@@ -415,7 +424,7 @@ client.on("interactionCreate", interaction => {
                 }
             ]
         }).then(canale => {
-            canale.send("Grazie per aver aperto un ticket")
+            canale.send({ content: "Grazie per aver aperto un ticket", components: [row4] })
         })
     }
 })
