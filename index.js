@@ -59,11 +59,13 @@ client.on("ready", () => {
         })
 
         guild.commands.create({
-            name: "chiudi",
-            description: "chiudi un ticket",
-            
+            name: "ora",
+            description: "risponde con l'orario",
             
         })
+
+
+        
     })
 })
 
@@ -124,22 +126,16 @@ client.on("interactionCreate", interaction => {
         interaction.reply({ embeds: [embed] })
     }
 
-    if (interaction.commandName == "chiudi") {
-        let topic = message.channel.topic;
-        if (!topic) {
-            message.channel.send("Non puoi utilizzare questo comando qui");
-            return
+    if (interaction.commandName == "ora") {
+        var data = new Date();
+            var ora = data.getHours();
+            var minuto = data.getMinutes();
+    
+            message.channel.send('ORA ATTUALE :alarm_clock: :' + ora + ':' + minuto);
+        
         }
-        if (topic.startsWith("User ID:")) {
-            let idUtente = topic.slice(9);
-            if (message.author.id == idUtente || message.member.permissions.has("MANAGE_CHANNELS")) {
-                message.channel.delete();
-            }
-        }
-        else {
-            message.channel.send("Non puoi utilizzare questo comando qui")
-        }
-    }
+
+    
 })
 
 
@@ -240,7 +236,7 @@ client.on("interactionCreate", interaction => {
 
 client.on("interactionCreate", interaction => {
     if (interaction.customId == "Chiudi") {
-        interaction.reply("")
+        interaction.reply("!close")
 
     }
 })
