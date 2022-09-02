@@ -9,6 +9,9 @@ const client = new Discord.Client({
 const mysql = require("mysql") 
 
 client.login(process.env.token);
+var data = new Date();
+var ora = data.getHours();
+var minuto = data.getMinutes();
 
 
 
@@ -127,13 +130,9 @@ client.on("interactionCreate", interaction => {
     }
 
     if (interaction.commandName == "ora") {
-        var data = new Date();
-            var ora = data.getHours();
-            var minuto = data.getMinutes();
-    
-            message.channel.send('ORA ATTUALE :alarm_clock: :' + ora + ':' + minuto);
+        message.channel.send('ORA ATTUALE :alarm_clock: :' + ora + ':' + minuto);
         
-        }
+    }
 
     
 })
