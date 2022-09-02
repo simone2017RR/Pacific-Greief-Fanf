@@ -254,12 +254,13 @@ client.on("messageCreate", message => {
             .setLabel("ATTIVITA: disabilitata")
             .setCustomId("apriTicket")
             .setStyle("DANGER")
+            .setDisabled()
             
 
         let row5 = new Discord.MessageActionRow()
             .addComponents(button6)
 
-        message.channel.send({ content: "Clicca sul bottone per aprire un ticket", components: [row5] })
+        message.channel.send({ components: [row5] })
     }
 })
 
