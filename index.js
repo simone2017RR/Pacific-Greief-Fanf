@@ -215,13 +215,15 @@ client.on("interactionCreate", interaction => {
         
     }
 
-    if (interaction.commandName == "tik-tok") {
-        interaction.reply({ content: "La nosta pagina tik tok: https://www.tiktok.com/@pacific.grief.gang", ephemeral: true });
-        
-    }
+
 
     if (interaction.commandName == "contributi") {
         interaction.reply({ content: "Se ci vovvesti donare e dare un contributo alla communito potresti donare anche sono 1 euro per l'impegno qui: https://www.paypal.me/thomas10998", ephemeral: true });
+        
+    }
+    
+    if (interaction.commandName == "tik-tok") {
+        interaction.reply({ content: "Questa è la nostra pagina tik tok: https://www.tiktok.com/@pacific.grief.gang", ephemeral: true });
         
     }
 
