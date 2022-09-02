@@ -248,7 +248,7 @@ client.on("interactionCreate", interaction => {
 })
 
 client.on("messageCreate", message => {
-    if (message.content == "!ticket") {
+    if (message.content == "!disabled") {
         message.channel.send("!!ATTENZIONE CANALE DISABILITATO NON MUOVERSI PER NESSUN MOTIVO!!")
         let button6 = new Discord.MessageButton()
             .setLabel("ATTIVITA: disabilitata")
