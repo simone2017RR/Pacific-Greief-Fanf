@@ -8,7 +8,7 @@ const client = new Discord.Client({
 })
 const mysql = require("mysql") 
 
-client.login(process.token.env);
+client.login(process.env.token);
 
 
 
