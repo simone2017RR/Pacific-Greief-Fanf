@@ -17,9 +17,139 @@ client.on("ready", () => {
     client.user.setActivity('il suo codice', { type: 'WATCHING' }); 
     console.log("CIAO");
 
+    client.guilds.cache.forEach(guild => {
+       
+
+        guild.commands.create({
+            name: "espelli",
+            description: "Espellere un utente",
+            options: [
+                {
+                    name: "user",
+                    description: "L'utente da espellere",
+                    type: "USER",
+                    required: true
+                },
+                {
+                    name: "reason",
+                    description: "Motivazione",
+                    type: "STRING",
+                    required: false
+                }
+            ]
+        })
+
+        guild.commands.create({
+            name: "ban",
+            description: "bannare un utente",
+            options: [
+                {
+                    name: "user",
+                    description: "L'utente da bannnare",
+                    type: "USER",
+                    required: true
+                },
+                {
+                    name: "reason",
+                    description: "Motivazione",
+                    type: "STRING",
+                    required: false
+                }
+            ]
+        })
+    })
+})
+
+client.on("interactionCreate", interaction => {
+    if (!interaction.isCommand()) return
+
+   
+
+    if (interaction.commandName == "espelli") {
+        if (!interaction.member.permissions.has("KICK_MEMBERS")) {
+            return interaction.reply({ content: "Non hai il permesso", ephemeral: true })
+        }
+
+        var utente = interaction.options.getUser("user")
+        var reason = interaction.options.getString("reason") || "Nessun motivo"
+
+        var member = interaction.guild.members.cache.get(utente.id)
+        if (!member?.kickable) {
+            return interaction.reply({ content: "Non posso espelere questo utente", ephemeral: true })
+        }
+
+        member.kick()
+
+        var embed = new Discord.MessageEmbed()
+            .setTitle("Utente espulso")
+            .setThumbnail(utente.displayAvatarURL())
+            .addField("Utente", utente.toString())
+            .addField("Motivazione", reason)
+            .setColor("AQUA")
+
+        interaction.reply({ embeds: [embed] })
+    }
+
+    if (interaction.commandName == "ban") {
+        if (!interaction.member.permissions.has("BAN_MEMBERS")) {
+            return interaction.reply({ content: "Non hai il permesso", ephemeral: true })
+        }
+
+        var utente = interaction.options.getUser("user")
+        var reason = interaction.options.getString("reason") || "Nessun motivo"
+
+        var member = interaction.guild.members.cache.get(utente.id)
+        if (!member?.kickable) {
+            return interaction.reply({ content: "Non posso bannare questo utente", ephemeral: true })
+        }
+
+        member.kick()
+
+        var embed = new Discord.MessageEmbed()
+            .setTitle("Utente bannato")
+            .setThumbnail(utente.displayAvatarURL())
+            .addField("Utente", utente.toString())
+            .addField("Motivazione", reason)
+            .setColor("AQUA")
+
+        interaction.reply({ embeds: [embed] })
+    }
+})
+
+
+//Module export
+const fs = require("fs")
+client.commands = new Discord.Collection()
+
+const commandsFolder = fs.readdirSync("./commands");
+for (const folder of commandsFolder) {
+    const commandsFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith(".js"));
+    for (const file of commandsFiles) {
+        const command = require(`./commands/${folder}/${file}`);
+        client.commands.set(command.name, command);
+    }
+}
+
+client.on("ready", () => {
+    client.guilds.cache.forEach(guild => {
+        client.commands.forEach(command => {
+            guild.commands.create(command.data)
+        })
+    })
+})
+
+client.on("interactionCreate", interaction => {
+    if (!interaction.isCommand()) return
+
+    const command = client.commands.get(interaction.commandName)
+    if (!command) return
+
+    command.execute(interaction)
+})
+
    
     
-})
+
 
 
 
