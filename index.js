@@ -247,6 +247,22 @@ client.on("interactionCreate", interaction => {
 
 })
 
+client.on("messageCreate", message => {
+    if (message.content == "!ticket") {
+        message.channel.send("!!ATTENZIONE CANALE DISABILITATO NON MUOVERSI PER NESSUN MOTIVO!!")
+        let button6 = new Discord.MessageButton()
+            .setLabel("ATTIVITA: disabilitata")
+            .setCustomId("apriTicket")
+            .setStyle("DANGER")
+            
+
+        let row5 = new Discord.MessageActionRow()
+            .addComponents(button6)
+
+        message.channel.send({ content: "Clicca sul bottone per aprire un ticket", components: [row4] })
+    }
+})
+
 
 client.on("interactionCreate", interaction => {
     if (interaction.customId == "Richiesta") {
