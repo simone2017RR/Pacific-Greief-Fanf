@@ -77,55 +77,6 @@ registerFont("./font/Roboto.ttf", { family: "roboto" })
 registerFont("./font/RobotoBold.ttf", { family: "robotoBold" })
 
 
-client.on("guildMemberRemove", async member => {
-    //Creare un canvas
-    let canvas = await createCanvas(1700, 600) //createCanvas(larghezza, altezza)
-    let ctx = await canvas.getContext("2d")
-
-    //Caricare un immagine
-    let img = await loadImage("./img/1.png")
-    ctx.drawImage(img, canvas.width / 2 - img.width / 2, canvas.height / 2 - img.height / 2) //drawImage(immagine, posizioneX, posizioneY, larghezza, altezza)
-
-
-    //Riempire di un colore
-    ctx.fillStyle = "rgba(0,0,0,0.30)"
-    ctx.fillRect(70, 70, canvas.width - 70 - 70, canvas.height - 70 - 70) //fillReact(posizioneX, posizioneY, larghezza, altezza)
-
-    //Caricare un immagine rotonda
-    ctx.save()
-    ctx.beginPath()
-    ctx.arc(150 + 300 / 2, canvas.height / 2, 150, 0, 2 * Math.PI, false) //arc(centroX, centroY, raggio, startAngolo, endAngolo, sensoOrario/Antiorario)
-    ctx.clip()
-    img = await loadImage(member.displayAvatarURL({ format: "png" }))
-    ctx.drawImage(img, 150, canvas.height / 2 - 300 / 2, 300, 300)
-    ctx.restore()
-
-    //Creare le scritte
-    ctx.fillStyle = "#fff"
-    ctx.textBaseline = "middle"
-
-    ctx.font = "80px roboto" //potete anche inserire sans-serif
-    ctx.fillText("ADDIO", 500, 200) //Testo, posizioneX, posizioneY
-
-    ctx.font = "100px robotoBold"
-    ctx.fillText(member.user.username.slice(0, 25), 500, canvas.height / 2)
-
-    ctx.font = "50px roboto"
-    ctx.fillText(`${member.guild.memberCount}° membro`, 500, 400)
-
-    //Mandare un canvas
-    let channel = client.channels.cache.get("1014602805522219068")
-
-    let attachment = new Discord.MessageAttachment(canvas.toBuffer(), "canvas.png")
-
-    channel.send({ files: [attachment] })
-
-    let embed = new Discord.MessageEmbed()
-        .setTitle("ADDIO")
-        .setThumbnail("attachment://canvas.png")
-
-    channel.send({ files: [attachment] })
-})
 
 client.on("guildMemberAdd", async member => {
     //Creare un canvas
@@ -341,6 +292,131 @@ client.on("interactionCreate", interaction => {
     if (interaction.customId == "Chiudi") {
         interaction.reply("!close")
 
+    }
+})
+
+client.on("messageCreate", message => {
+    if (message.content == "!close") {
+        let topic = message.channel.topic;
+        if (!topic) {
+            message.channel.send("Non puoi utilizzare questo comando qui");
+            return
+        }
+        if (topic.startsWith("User ID:")) {
+            let idUtente = topic.slice(9);
+            if (message.author.id == idUtente || message.member.permissions.has("MANAGE_CHANNELS")) {
+                message.channel.delete();
+            }
+        }
+        else {
+            message.channel.send("Non puoi utilizzare questo comando qui")
+        }
+    }
+    if (message.content.startsWith("!add")) {
+        let topic = message.channel.topic;
+        if (!topic) {
+            message.channel.send("Non puoi utilizzare questo comando qui");
+            return
+        }
+        if (topic.startsWith("User ID:")) {
+            let idUtente = topic.slice(9);
+            if (message.author.id == idUtente || message.member.permissions.has("MANAGE_CHANNELS")) {
+                let utente = message.mentions.members.first();
+                if (!utente) {
+                    message.channel.send("Inserire un utente valido");
+                    return
+                }
+                let haIlPermesso = message.channel.permissionsFor(utente).has("VIEW_CHANNEL", true)
+                if (haIlPermesso) {
+                    message.channel.send("Questo utente ha gia accesso al ticket")
+                    return
+                }
+                message.channel.permissionOverwrites.edit(utente, {
+                    VIEW_CHANNEL: true
+                })
+                message.channel.send(`${utente.toString()} è stato aggiunto al ticket`)
+            }
+        }
+        else {
+            message.channel.send("Non puoi utilizzare questo comando qui")
+        }
+    }
+    if (message.content.startsWith("!remove")) {
+        let topic = message.channel.topic;
+        if (!topic) {
+            message.channel.send("Non puoi utilizzare questo comando qui");
+            return
+        }
+        if (topic.startsWith("User ID:")) {
+            let idUtente = topic.slice(9);
+            if (message.author.id == idUtente || message.member.permissions.has("MANAGE_CHANNELS")) {
+                let utente = message.mentions.members.first();
+                if (!utente) {
+                    message.channel.send("Inserire un utente valido");
+                    return
+                }
+                let haIlPermesso = message.channel.permissionsFor(utente).has("VIEW_CHANNEL", true)
+                if (!haIlPermesso) {
+                    message.channel.send("Questo utente non ha gia accesso al ticket")
+                    return
+                }
+                if (utente.permissions.has("MANAGE_CHANNELS")) {
+                    message.channel.send("Non puoi rimuovere questo utente")
+                    return
+                }
+                message.channel.permissionOverwrites.edit(utente, {
+                    VIEW_CHANNEL: false
+                })
+                message.channel.send(`${utente.toString()} è stato rimosso al ticket`)
+            }
+        }
+        else {
+            message.channel.send("Non puoi utilizzare questo comando qui")
+        }
+    }
+})
+
+client.on("messageCreate", message => {
+    if (message.content == "!ticket") {
+        let button5 = new Discord.MessageButton()
+            .setLabel("Apri ticket")
+            .setCustomId("apriTicket")
+            .setStyle("SUCCESS")
+
+        let row4 = new Discord.MessageActionRow()
+            .addComponents(button5)
+
+        message.channel.send({ content: "Clicca sul bottone per aprire un ticket", components: [row4] })
+    }
+})
+
+client.on("interactionCreate", interaction => {
+    if (interaction.customId == "apriTicket") {
+        if (interaction.guild.channels.cache.find(canale => canale.topic == `User ID: ${interaction.user.id}`)) {
+            interaction.user.send("Hai gia un ticket aperto").catch(() => { })
+            return
+        }
+        interaction.guild.channels.create(interaction.user.username, {
+            type: "text",
+            topic: `User ID: ${interaction.user.id}`,
+            parent: "1014606887674712115", //Settare la categoria,
+            permissionOverwrites: [
+                {
+                    id: interaction.guild.id,
+                    deny: ["VIEW_CHANNEL"]
+                },
+                {
+                    id: interaction.user.id,
+                    allow: ["VIEW_CHANNEL"]
+                },
+                { //Aggiungere altri "blocchi" se si vogliono dare permessi anche a ruoli o utenti
+                    id: "1014605533224902778",
+                    allow: ["VIEW_CHANNEL"]
+                }
+            ]
+        }).then(canale => {
+            canale.send("Grazie per aver aperto un ticket")
+        })
     }
 })
 
