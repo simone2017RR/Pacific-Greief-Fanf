@@ -295,6 +295,13 @@ client.on("interactionCreate", interaction => {
     }
 })
 
+client.on("interactionCreate", interaction => {
+    if (interaction.customId == "ChiudiTicket") {
+        interaction.reply("!close")
+
+    }
+})
+
 client.on("messageCreate", message => {
     if (message.content == "!close") {
         let topic = message.channel.topic;
@@ -395,7 +402,7 @@ client.on("interactionCreate", interaction => {
         
         let button5 = new Discord.MessageButton()
             .setLabel("⛔ CHIUDI")
-            .setCustomId("Chiudi")
+            .setCustomId("ChiudiTicket")
             .setStyle("DANGER")
 
         let row4 = new Discord.MessageActionRow()
