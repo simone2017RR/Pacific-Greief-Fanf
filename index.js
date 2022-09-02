@@ -130,7 +130,7 @@ client.on("interactionCreate", interaction => {
     }
 
     if (interaction.commandName == "ora") {
-        message.channel.send('ORA ATTUALE :alarm_clock: :' + ora + ':' + minuto);
+        interaction.reply('ORA ATTUALE :alarm_clock: :' + ora + ':' + minuto);
         
     }
 
