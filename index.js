@@ -57,8 +57,17 @@ client.on("ready", () => {
                 }
             ]
         })
+
+        guild.commands.create({
+            name: "chiudi",
+            description: "chiudi un ticket",
+            
+            
+        })
     })
 })
+
+
 
 client.on("interactionCreate", interaction => {
     if (!interaction.isCommand()) return
@@ -113,6 +122,23 @@ client.on("interactionCreate", interaction => {
             .setColor("AQUA")
 
         interaction.reply({ embeds: [embed] })
+    }
+
+    if (interaction.commandName == "chiudi") {
+        let topic = message.channel.topic;
+        if (!topic) {
+            message.channel.send("Non puoi utilizzare questo comando qui");
+            return
+        }
+        if (topic.startsWith("User ID:")) {
+            let idUtente = topic.slice(9);
+            if (message.author.id == idUtente || message.member.permissions.has("MANAGE_CHANNELS")) {
+                message.channel.delete();
+            }
+        }
+        else {
+            message.channel.send("Non puoi utilizzare questo comando qui")
+        }
     }
 })
 
@@ -174,7 +200,17 @@ client.on("interactionCreate", interaction => {
 
 client.on("interactionCreate", interaction => {
     if (interaction.customId == "Richiesta") {
-     if (interaction.guild.channels.cache.find(canale => canale.topic == `User ID: ${interaction.user.id}`)) {
+        
+
+        let button4 = new Discord.MessageButton()
+            .setLabel("⛔ CHIUDI")
+            .setCustomId("Chiudi")
+            .setStyle("DANGER")
+
+        let row3 = new Discord.MessageActionRow()
+            .addComponents(button4)
+        
+        if (interaction.guild.channels.cache.find(canale => canale.topic == `User ID: ${interaction.user.id}`)) {
             interaction.user.send("Hai gia una richiesta in sospeso").catch(() => { })
             return
         }
@@ -197,8 +233,15 @@ client.on("interactionCreate", interaction => {
                 }
             ]
         }).then(canale => {
-            canale.send("Grazie per aver aperto un ticket")
+            canale.send({ content: "Lo sapevi che per le richieste online ci mettiamo meno di 24 ore per effettuarlo! Provalo anche tu su Pacific Grief Gang", components: [row3] })
         })
+    }
+})
+
+client.on("interactionCreate", interaction => {
+    if (interaction.customId == "Chiudi") {
+        interaction.reply("")
+
     }
 })
 
