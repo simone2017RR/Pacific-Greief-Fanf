@@ -1,13 +1,21 @@
 
 
-const Discord = require('discord.js');
+const Discord = require("discord.js");
+const config = require(`./config.json`);
+const dash = require(`./dashboard/settings.json`);
+const colors = require("colors");
+const Enmap = require("enmap");
 
 const client = new Discord.Client({
     intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_VOICE_STATES", "GUILD_VOICE_STATES"],
     partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 })
+client.settings = new Enmap({ name: "settings",dataDir: "./databases/settings"});
 const mysql = require("mysql") 
-
+client.on("ready", () => {
+    require("./dashboard/index.js")(client);
+ })
+ 
 client.login(process.env.token);
 var data = new Date();
 var ora = data.getHours();
@@ -145,11 +153,7 @@ client.on("guildMemberAdd", async member => {
 
     channel.send({ files: [attachment] })
 
-    let embed = new Discord.MessageEmbed()
-        .setTitle("BENVENUTO")
-        .setThumbnail("attachment://canvas.png")
-
-    channel.send({ files: [attachment] })
+    
 })
 
 
