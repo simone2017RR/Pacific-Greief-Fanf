@@ -17,6 +17,7 @@
     "discord-buttons": "^4.0.0-deprecated",
     "discord.js": "^13.10.2",
     "distube": "^3.3.2",
+    "enmap": "^5.9.1",
     "libsodium-wrappers": "^0.7.9",
     "mongodb": "^4.9.0",
     "ms": "^2.1.3",
