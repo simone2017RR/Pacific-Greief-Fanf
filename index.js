@@ -12,9 +12,7 @@ const client = new Discord.Client({
 })
 client.settings = new Enmap({ name: "settings",dataDir: "./databases/settings"});
 const mysql = require("mysql") 
-client.on("ready", () => {
-    require("./dashboard/index.js")(client);
- })
+
  
 client.login(process.env.token);
 var data = new Date();
@@ -25,6 +23,7 @@ var minuto = data.getMinutes();
 
 
 client.on("ready", () => {
+    require("./dashboard/index.js")(client);
     client.user.setActivity('il suo codice', { type: 'WATCHING' }); 
     console.log("CIAO");
 
