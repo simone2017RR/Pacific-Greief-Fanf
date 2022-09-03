@@ -1,16 +1,14 @@
 
 
 const Discord = require("discord.js");
-const config = require(`./config.json`);
-const dash = require(`./dashboard/settings.json`);
-const Enmap = require("enmap");
+
 
 
 const client = new Discord.Client({
     intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_VOICE_STATES", "GUILD_VOICE_STATES"],
     partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 })
-client.settings = new Enmap({ name: "settings",dataDir: "./databases/settings"});
+
 const mysql = require("mysql") 
 
  
@@ -23,7 +21,7 @@ var minuto = data.getMinutes();
 
 
 client.on("ready", () => {
-    require("./dashboard/index.js")(client);
+    
     client.user.setActivity('il suo codice', { type: 'WATCHING' }); 
     console.log("CIAO");
 
