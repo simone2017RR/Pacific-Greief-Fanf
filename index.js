@@ -3,7 +3,7 @@
 const Discord = require("discord.js");
 const config = require(`./config.json`);
 const dash = require(`./dashboard/settings.json`);
-
+const Enmap = require("enmap");
 
 
 const client = new Discord.Client({
