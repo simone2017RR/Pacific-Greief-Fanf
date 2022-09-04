@@ -13,6 +13,17 @@ const mysql = require("mysql")
 
  
 client.login(process.env.token);
+const { DisTube } = require("distube")
+//Plugin facoltativi
+const { SpotifyPlugin } = require("@distube/spotify")
+const { SoundCloudPlugin } = require("@distube/soundcloud")
+
+const distube = new DisTube(client, {
+    youtubeDL: false,
+    plugins: [new SpotifyPlugin(), new SoundCloudPlugin()],
+    leaveOnEmpty: true,
+    leaveOnStop: true
+})
 var data = new Date();
 var ora = data.getHours();
 var minuto = data.getMinutes();
@@ -125,6 +136,18 @@ client.on("ready", () => {
         guild.commands.create({
             name: "verificati",
             description: "Aggiunge il ruolo membro",
+            
+        })
+
+        guild.commands.create({
+            name: "play",
+            description: "Metti della musica",
+            
+        })
+
+        guild.commands.create({
+            name: "stop",
+            description: "Ferma la canzone",
             
         })
 
@@ -286,8 +309,89 @@ client.on("interactionCreate", interaction => {
         }
     }
 
+    if (interaction.commandName == "play") {
+        const voiceChannel = message.member.voice.channel
+        if (!voiceChannel) {
+            return message.channel.send("Devi essere in un canale vocale")
+        }
+
+        const voiceChannelBot = message.guild.channels.cache.find(x => x.type == "GUILD_VOICE" && x.members.has(client.user.id))
+        if (voiceChannelBot && voiceChannel.id != voiceChannelBot.id) {
+            return message.channel.send("Qualun'altro sta già ascoltando della musica")
+        }
+
+        let args = message.content.split(/\s+/)
+        let query = args.slice(1).join(" ")
+
+        if (!query) {
+            return message.channel.send("Inserisci la canzone che vuoi ascoltare")
+        }
+
+        distube.play(voiceChannelBot || voiceChannel, query, {
+            member: message.member,
+            textChannel: message.channel,
+            message: message
+        })
+
+        if (interaction.commandName == "warn") {
+        if (!message.member.permissions.has('ADMINISTRATOR')) {
+            return message.channel.send('Non hai il permesso');
+        }
+        
+        
+    }
+
+    if (interaction.commandName == "stop") {
+        const voiceChannel = message.member.voice.channel
+        if (!voiceChannel) {
+            return message.channel.send("Devi essere in un canale vocale")
+        }
+
+        const voiceChannelBot = message.guild.channels.cache.find(x => x.type == "GUILD_VOICE" && x.members.has(client.user.id))
+        if (voiceChannelBot && voiceChannel.id != voiceChannelBot.id) {
+            return message.channel.send("Qualun'altro sta già ascoltando della musica")
+        }
+
+        try {
+            distube.pause(message)
+        } catch {
+            return message.channel.send("Nessuna canzone in riproduzione o canzone già in pausa")
+        }
+
+        message.channel.send("Canzone  in pausa")
+        
+        
+    }
+
+
+        
+        
+    }
+
     
     
+})
+
+
+distube.on("addSong", (queue, song) => {
+    let embed = new Discord.MessageEmbed()
+        .setTitle("Canzone aggiunta")
+        .addField("Canzone:", song.name)
+
+    queue.textChannel.send({ embeds: [embed] })
+})
+
+distube.on("playSong", (queue, song) => {
+    let embed = new Discord.MessageEmbed()
+        .setTitle("Metto musica...")
+        .addField("Canzone:", song.name)
+        .addField("Richiesta da:", song.user.toString())
+
+    queue.textChannel.send({ embeds: [embed] })
+})
+
+distube.on("searchNoResult", (message, query) => {
+    message.channel.send("Canzone non trovata")
 })
 
 
