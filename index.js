@@ -102,6 +102,33 @@ client.on("ready", () => {
             
         })
 
+        guild.commands.create({
+            name: "warn",
+            description: "Warnare un utente un utente",
+            options: [
+                {
+                    name: "user",
+                    description: "L'utente da bannnare",
+                    type: "USER",
+                    required: true
+                },
+                {
+                    name: "reason",
+                    description: "Motivazione",
+                    type: "STRING",
+                    required: false
+                }
+            ]
+
+        })
+
+        guild.commands.create({
+            name: "verificati",
+            description: "Aggiunge il ruolo membro",
+            
+        })
+
+
 
         
     })
@@ -237,6 +264,26 @@ client.on("interactionCreate", interaction => {
     if (interaction.commandName == "dashboard") {
         interaction.reply("Ecco il link della dashboard");
         
+    }
+
+    if (interaction.commandName == "warn") {
+        if (!message.member.permissions.has('ADMINISTRATOR')) {
+            return message.channel.send('Non hai il permesso');
+        }
+        
+        
+    }
+
+    if (interaction.commandName == "verificati") {
+        if (utente.roles.cache.has("ruolo non verif")) {
+            interaction.reply({ content: "Ti sei apena verificato", ephemeral: true })
+            utente.roles.add("ruolo verificato");
+        }
+
+        else if (utente.roles.cache.has("ruolo verificato")) {
+            interaction.reply({ content: "Sei già verificato", ephemeral: true })
+            
+        }
     }
 
     
@@ -453,6 +500,13 @@ client.on("messageCreate", message => {
 
 client.on("messageCreate", message => {
     if (message.content == "!ticket") {
+        var embed4 = new Discord.MessageEmbed()
+            .setTitle("ᴀᴘʀɪ ᴜɴ ᴛɪᴄᴋᴇᴛ!")
+            .setDescription("Cʟɪᴄᴄᴀ sᴜʟ ᴘᴜʟsᴀɴᴛᴇ sᴏʟʟ sᴇ ʜᴀɪ ʙɪsᴏɢɴᴏ ᴅɪ sᴜᴘᴘᴏʀᴛᴏ ᴇᴄᴄ.")
+            .setFooter("SE VUOI RICHIEDERE UN GIREF VAI SU #║⛔〗ʀɪᴄʜɪᴇsᴛᴀ-ɢʀɪᴇғ")
+            
+            .setColor("GREEN")
+
         let button5 = new Discord.MessageButton()
             .setLabel("Apri ticket")
             .setCustomId("apriTicket")
@@ -461,7 +515,7 @@ client.on("messageCreate", message => {
         let row4 = new Discord.MessageActionRow()
             .addComponents(button5)
 
-        message.channel.send({ content: "Clicca sul bottone per aprire un ticket", components: [row4] })
+        message.channel.send({ embeds: [embed4], components: [row4] })
     }
 })
 
