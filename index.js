@@ -96,6 +96,12 @@ client.on("ready", () => {
             
         })
 
+        guild.commands.create({
+            name: "dashboard",
+            description: "Risponde con il link della dashboard",
+            
+        })
+
 
         
     })
@@ -225,6 +231,11 @@ client.on("interactionCreate", interaction => {
     
     if (interaction.commandName == "tik-tok") {
         interaction.reply({ content: "Questa è la nostra pagina tik tok: https://www.tiktok.com/@pacific.grief.gang", ephemeral: true });
+        
+    }
+
+    if (interaction.commandName == "dashboard") {
+        interaction.reply("Ecco il link della dashboard");
         
     }
 
