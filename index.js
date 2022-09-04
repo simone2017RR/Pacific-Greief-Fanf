@@ -369,7 +369,7 @@ client.on("interactionCreate", interaction => {
         
     }
     if (interaction.commandName == "disabilita") {
-        message.channel.send("!!ATTENZIONE CANALE DISABILITATO NON MUOVERSI PER NESSUN MOTIVO!!")
+        interaction.reply("!!ATTENZIONE CANALE DISABILITATO NON MUOVERSI PER NESSUN MOTIVO!!")
         let button6 = new Discord.MessageButton()
             .setLabel("ATTIVITA: disabilitata")
             .setCustomId("apriTicket")
