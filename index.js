@@ -151,6 +151,12 @@ client.on("ready", () => {
             
         })
 
+        guild.commands.create({
+            name: "disablita",
+            description: "Disabilita il canale",
+            
+        })
+
 
 
         
@@ -360,6 +366,21 @@ client.on("interactionCreate", interaction => {
 
         message.channel.send("Canzone  in pausa")
         
+        
+    }
+    if (interaction.commandName == "disabilita") {
+        message.channel.send("!!ATTENZIONE CANALE DISABILITATO NON MUOVERSI PER NESSUN MOTIVO!!")
+        let button6 = new Discord.MessageButton()
+            .setLabel("ATTIVITA: disabilitata")
+            .setCustomId("apriTicket")
+            .setStyle("DANGER")
+            .setDisabled()
+            
+
+        let row5 = new Discord.MessageActionRow()
+            .addComponents(button6)
+
+        message.channel.send({ components: [row5, row5] })
         
     }
 
