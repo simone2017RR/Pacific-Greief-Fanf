@@ -318,19 +318,19 @@ client.on("interactionCreate", interaction => {
     if (interaction.commandName == "play") {
         const voiceChannel = message.member.voice.channel
         if (!voiceChannel) {
-            return message.channel.send("Devi essere in un canale vocale")
+            return interaction.reply("Devi essere in un canale vocale")
         }
 
         const voiceChannelBot = message.guild.channels.cache.find(x => x.type == "GUILD_VOICE" && x.members.has(client.user.id))
         if (voiceChannelBot && voiceChannel.id != voiceChannelBot.id) {
-            return message.channel.send("Qualun'altro sta già ascoltando della musica")
+            return interaction.reply("Qualun'altro sta già ascoltando della musica")
         }
 
         let args = message.content.split(/\s+/)
         let query = args.slice(1).join(" ")
 
         if (!query) {
-            return message.channel.send("Inserisci la canzone che vuoi ascoltare")
+            return interaction.reply("Inserisci la canzone che vuoi ascoltare")
         }
 
         distube.play(voiceChannelBot || voiceChannel, query, {
