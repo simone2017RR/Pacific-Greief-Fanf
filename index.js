@@ -313,6 +313,7 @@ client.on("messageCreate", message => {
             .setLabel("ㅤ")
             .setCustomId("Online")
             .setStyle("DANGER")
+            .setDisabled()
 
         let row1 = new Discord.MessageActionRow()
             .addComponents(button2)
@@ -321,6 +322,7 @@ client.on("messageCreate", message => {
             .setLabel("ㅤ")
             .setCustomId("Invito")
             .setStyle("SUCCESS")
+            .setDisabled()
 
         let row2 = new Discord.MessageActionRow()
             .addComponents(button3)
