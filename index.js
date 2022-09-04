@@ -458,7 +458,7 @@ client.on("messageCreate", message => {
 
 client.on("interactionCreate", interaction => {
     if (interaction.customId == "Online") {
-        interaction.reply({ content: "Link: (stio in costruzione)", ephemeral: true })
+        interaction.reply({ content: "Link: https://bit.ly/3BflOQU", ephemeral: true })
     }
         
 
